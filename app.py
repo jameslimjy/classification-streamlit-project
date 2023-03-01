@@ -107,7 +107,7 @@ def main():
 
 a,b,c = st.columns([0.2,0.6,0.2])
 with b:
-  st.image("vllkyt19n98psusds8.jpg", use_column_width=True)
+  st.image("vllkyt19n98psusds8.jpeg", use_column_width=True)
 
 
 # description about the project and code files            

@@ -1,4 +1,3 @@
-# import all the app dependencies
 import pandas as pd
 import numpy as np
 import sklearn
@@ -9,7 +8,6 @@ import matplotlib
 from IPython import get_ipython
 from PIL import Image
 
-# load the encoder and model object
 model = joblib.load("rta_model_deploy3.joblib")
 encoder = joblib.load("ordinal_encoder2.joblib")
 
@@ -50,11 +48,8 @@ options_acc_area = ['Other', 'Office areas', 'Residential areas', ' Church areas
 features = ['Number_of_vehicles_involved','Number_of_casualties','Hour_of_Day','Type_of_collision','Age_band_of_driver','Sex_of_driver',
        'Educational_level','Service_year_of_vehicle','Day_of_week','Area_accident_occured']
 
-
-# Give a title to web app using html syntax
+# take input 
 st.markdown("<h1 style='text-align: center;'>Accident Severity Prediction App 🚧</h1>", unsafe_allow_html=True)
-
-# define a main() function to take inputs from user in form based approch
 def main():
        with st.form("road_traffic_severity_form"):
               st.subheader("Pleas enter the following inputs:")
@@ -83,7 +78,6 @@ def main():
               num_arr = [No_vehicles,No_casualties,Hour]
               pred_arr = np.array(num_arr + encoded_arr).reshape(1,-1)              
           
-# predict the target from all the input features
               prediction = model.predict(pred_arr)
               
               if prediction == 0:
@@ -93,16 +87,13 @@ def main():
               else:
                      st.write(f"The severity prediciton is slight injury")
                   
-              st.subheader("Explainable AI (XAI) to understand predictions")
-# Explainable AI using shap library 
+              st.subheader("Explainable AI (XAI) to understand predictions")  
               shap.initjs()
               shap_values = shap.TreeExplainer(model).shap_values(pred_arr)
               st.write(f"For prediction {prediction}") 
               shap.force_plot(shap.TreeExplainer(model).expected_value[0], shap_values[0],
                               pred_arr, feature_names=features, matplotlib=True,show=False).savefig("pred_force_plot.jpg", bbox_inches='tight')
               img = Image.open("pred_force_plot.jpg")
-
-# render the shap plot on front-end to explain predictions
               st.image(img, caption='Model explanation using shap')
               
               st.write("Developed By: Avi kumar Talaviya")
@@ -110,3 +101,35 @@ def main():
               [Linkedin](https://www.linkedin.com/in/avi-kumar-talaviya-739153147/) |
               [Kaggle](https://www.kaggle.com/avikumart) 
               """)
+              
+
+# post the image of the accident
+
+a,b,c = st.columns([0.2,0.6,0.2])
+with b:
+  st.image("vllkyt19n98psusds8.jpg", use_column_width=True)
+
+
+# description about the project and code files            
+
+st.subheader("🧾Description:")
+st.text("""This data set is collected from Addis Ababa Sub-city police departments for master's research work. 
+The data set has been prepared from manual records of road traffic accidents of the year 2017-20. 
+All the sensitive information has been excluded during data encoding and finally it has 32 features and 12316 instances of the accident.
+Then it is preprocessed and for identification of major causes of the accident by analyzing it using different machine learning classification algorithms.
+""")
+
+st.markdown("Source of the dataset: [Click Here](https://www.narcis.nl/dataset/RecordID/oai%3Aeasy.dans.knaw.nl%3Aeasy-dataset%3A191591)")
+
+st.subheader("🧭 Problem Statement:")
+st.text("""The target feature is Accident_severity which is a multi-class variable. 
+The task is to classify this variable based on the other 31 features step-by-step by going through each day's task. 
+The metric for evaluation will be f1-score
+""")
+
+st.markdown("Please find GitHub repository link of project: [Click Here](https://github.com/avikumart/Road-Traffic-Severity-Classification-Project)")                  
+                  
+if __name__ == '__main__':
+   main()
+    
+   
